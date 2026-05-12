@@ -31,14 +31,23 @@ goblin_rect = goblin_surface.get_rect(midbottom = (1152, 620))
 hero_surface = pygame.image.load(image_hero_path).convert()
 hero_surface = pygame.transform.scale(hero_surface, (128,128))
 hero_rect = hero_surface.get_rect(midbottom = (64, 620))
+hero_gravity = 0
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit() 
             exit()
+
         if event.type == pygame.MOUSEMOTION:
             if hero_rect.collidepoint(event.pos): print('collision')
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                hero_gravity = -20
+
+        if event.type == pygame.KEYUP:
+            print('key up')
 
     screen.blit(sky_surface, (0,0))
     screen.blit(ground_surface, (0,620))
@@ -47,11 +56,20 @@ while True:
     #pygame.draw.line(screen, 'Gold', (0,0), pygame.mouse.get_pos(), 10)
     screen.blit(score_surf, score_rect)
 
+    #PLAYER
+    hero_gravity += 1
+
     screen.blit(hero_surface, hero_rect)
-    #hero_rect.left += 1
+    hero_rect.y += hero_gravity
+    hero_rect.x += 3
+
     screen.blit(goblin_surface, goblin_rect)
     goblin_rect.right -= 4
     if goblin_rect.left < -128: goblin_rect.left = 1280
+
+    #keys = pygame.key.get_pressed()
+    #if keys[pygame.K_SPACE]:
+    #    print('jump')
 
     #if hero_rect.colliderect(goblin_rect):
         #print('collision')
