@@ -18,7 +18,7 @@ test_font = pygame.font.Font(font_path, 65)
 sky_surface = pygame.image.load(image_path).convert_alpha()
 
 ground_surface = pygame.Surface((1280, 200))
-ground_surface.fill('Brown')
+ground_surface.fill('#5a391b')
 
 score_surf = test_font.render('My game', False, 'Black')
 score_rect = score_surf.get_rect(center = (640, 50))
@@ -42,10 +42,13 @@ while True:
 
     screen.blit(sky_surface, (0,0))
     screen.blit(ground_surface, (0,620))
+    pygame.draw.rect(screen, 'Pink', score_rect)
+    pygame.draw.rect(screen, 'Pink', score_rect, 6)
+    #pygame.draw.line(screen, 'Gold', (0,0), pygame.mouse.get_pos(), 10)
     screen.blit(score_surf, score_rect)
 
     screen.blit(hero_surface, hero_rect)
-    hero_rect.left += 1
+    #hero_rect.left += 1
     screen.blit(goblin_surface, goblin_rect)
     goblin_rect.right -= 4
     if goblin_rect.left < -128: goblin_rect.left = 1280
