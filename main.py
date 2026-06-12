@@ -40,12 +40,12 @@ while True:
             exit()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if hero_rect.collidepoint(event.pos): 
+            if hero_rect.collidepoint(event.pos) and hero_rect.bottom >= 620: 
                 hero_gravity = -20
 
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and hero_rect.bottom >= 620:
                 hero_gravity = -20
 
         if event.type == pygame.KEYUP:
@@ -60,9 +60,11 @@ while True:
 
     #PLAYER
     hero_gravity += 1
-    screen.blit(hero_surface, hero_rect)
     hero_rect.y += hero_gravity
-    hero_rect.x += 3
+    #hero_rect.x += 3
+    if hero_rect.bottom >= 620:
+        hero_rect.bottom = 620
+    screen.blit(hero_surface, hero_rect)
 
     screen.blit(goblin_surface, goblin_rect)
     goblin_rect.right -= 4
