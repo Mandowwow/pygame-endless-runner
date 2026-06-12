@@ -39,8 +39,10 @@ while True:
             pygame.quit() 
             exit()
 
-        if event.type == pygame.MOUSEMOTION:
-            if hero_rect.collidepoint(event.pos): print('collision')
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if hero_rect.collidepoint(event.pos): 
+                hero_gravity = -20
+
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
@@ -58,7 +60,6 @@ while True:
 
     #PLAYER
     hero_gravity += 1
-
     screen.blit(hero_surface, hero_rect)
     hero_rect.y += hero_gravity
     hero_rect.x += 3
