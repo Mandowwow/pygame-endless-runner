@@ -25,11 +25,11 @@ score_rect = score_surf.get_rect(center = (640, 50))
 
 goblin_surface = pygame.image.load(image_goblin_path).convert()
 goblin_surface = pygame.transform.flip(goblin_surface, True, False)
-goblin_surface = pygame.transform.scale(goblin_surface, (128, 128))
+goblin_surface = pygame.transform.scale(goblin_surface, (70, 70))
 goblin_rect = goblin_surface.get_rect(midbottom = (1152, 620))
 
 hero_surface = pygame.image.load(image_hero_path).convert()
-hero_surface = pygame.transform.scale(hero_surface, (128,128))
+hero_surface = pygame.transform.scale(hero_surface, (74,104))
 hero_rect = hero_surface.get_rect(midbottom = (64, 620))
 hero_gravity = 0
 
@@ -69,6 +69,11 @@ while True:
     screen.blit(goblin_surface, goblin_rect)
     goblin_rect.right -= 4
     if goblin_rect.left < -128: goblin_rect.left = 1280
+
+    #COLLISION
+    if goblin_rect.colliderect(hero_rect):
+        pygame.quit() 
+        exit()
 
     #keys = pygame.key.get_pressed()
     #if keys[pygame.K_SPACE]:
