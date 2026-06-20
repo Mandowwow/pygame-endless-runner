@@ -2,6 +2,12 @@ import os
 import pygame
 from sys import exit 
 
+def display_score():
+    current_time = int(pygame.time.get_ticks() / 1000) - start_time
+    score_surf = test_font.render(f'Score: {current_time}',False,(64,64,64))
+    score_rect = score_surf.get_rect(center = (640, 50))
+    screen.blit(score_surf, score_rect)
+
 pygame.init()
 screen = pygame.display.set_mode((1280,720))
 pygame.display.set_caption('Nora')
@@ -15,14 +21,15 @@ font_path = os.path.join(base_dir, "Assets", "Fonts", "Pixeltype.ttf")
 test_font = pygame.font.Font(font_path, 65)
 
 game_active = True
+start_time = 0
 
 sky_surface = pygame.image.load(image_path).convert_alpha()
 
 ground_surface = pygame.Surface((1280, 200))
 ground_surface.fill('#5a391b')
 
-score_surf = test_font.render('My game', False, 'Black')
-score_rect = score_surf.get_rect(center = (640, 50))
+#score_surf = test_font.render('My game', False, 'Black')
+#score_rect = score_surf.get_rect(center = (640, 50))
 
 goblin_surface = pygame.image.load(image_goblin_path).convert()
 goblin_surface = pygame.transform.flip(goblin_surface, True, False)
@@ -47,19 +54,20 @@ while True:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and hero_rect.bottom >= 620:
-                    hero_gravity = -20
+                    hero_gravity = -30
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
                 goblin_rect.left = 1152
+                start_time = int(pygame.time.get_ticks() / 1000)
 
     if game_active:
         screen.blit(sky_surface, (0,0))
         screen.blit(ground_surface, (0,620))
-        pygame.draw.rect(screen, 'Pink', score_rect)
-        pygame.draw.rect(screen, 'Pink', score_rect, 6)
-        #pygame.draw.line(screen, 'Gold', (0,0), pygame.mouse.get_pos(), 10)
-        screen.blit(score_surf, score_rect)
+        # pygame.draw.rect(screen, 'Pink', score_rect)
+        # pygame.draw.rect(screen, 'Pink', score_rect, 6)
+        # screen.blit(score_surf, score_rect)
+        display_score()
 
         #PLAYER
         hero_gravity += 1
