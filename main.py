@@ -1,6 +1,7 @@
 import os
 import pygame
-from sys import exit 
+from sys import exit
+from random import randint
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
@@ -8,6 +9,18 @@ def display_score():
     score_rect = score_surf.get_rect(center = (640, 50))
     screen.blit(score_surf, score_rect)
     return current_time
+
+def enemy_movement(enemy_list):
+    if enemy_list:
+        for enemy_rect in enemy_list:
+            enemy_rect.x -= 5
+
+            screen.blit(goblin_surface, enemy_rect)
+
+        enemy_list = [enemy for enemy in enemy_list if enemy.x > -128]
+
+        return enemy_list
+    else: return []
 
 pygame.init()
 screen = pygame.display.set_mode((1280,720))
@@ -18,6 +31,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 image_path = os.path.join(base_dir, "Assets", "Sprites", "Sky1.jpg")
 image_goblin_path = os.path.join(base_dir, "Assets", "Sprites", "goblin.png")
 image_hero_path = os.path.join(base_dir, "Assets", "Sprites", "hero.png")
+image_eye_path = os.path.join(base_dir, "Assets", "Sprites", "eye.png")
 font_path = os.path.join(base_dir, "Assets", "Fonts", "Pixeltype.ttf")
 test_font = pygame.font.Font(font_path, 65)
 
@@ -33,10 +47,18 @@ ground_surface.fill('#5a391b')
 #score_surf = test_font.render('My game', False, 'Black')
 #score_rect = score_surf.get_rect(center = (640, 50))
 
+
+#enemies / obstacles
 goblin_surface = pygame.image.load(image_goblin_path).convert_alpha()
 goblin_surface = pygame.transform.flip(goblin_surface, True, False)
 goblin_surface = pygame.transform.scale2x(goblin_surface)
-goblin_rect = goblin_surface.get_rect(midbottom = (1152, 620))
+#goblin_rect = goblin_surface.get_rect(midbottom = (1152, 620))
+
+eye_surf = pygame.image.load(image_eye_path).convert_alpha()
+eye_surf = pygame.transform.flip(eye_surf, True, False)
+eye_surf = pygame.transform.scale2x(eye_surf)
+
+enemy_rect_list = []
 
 hero_surface = pygame.image.load(image_hero_path).convert_alpha()
 hero_surface = pygame.transform.scale2x(hero_surface)
@@ -53,6 +75,10 @@ game_name_rect = game_name_surf.get_rect(center = (640, 260))
 
 game_message_surf = test_font.render('Press space to run', False,(111,196,169))
 game_message_rect = game_message_surf.get_rect(center = (640, 460))
+
+#timer
+enemy_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(enemy_timer, 1750)
 
 while True:
     for event in pygame.event.get():
@@ -71,8 +97,14 @@ while True:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
-                goblin_rect.left = 1152
                 start_time = int(pygame.time.get_ticks() / 1000)
+
+        if event.type == enemy_timer and game_active:
+            if randint(0,2):
+                enemy_rect_list.append(goblin_surface.get_rect(midbottom = (randint(1280, 1400), 620)))
+            else:
+                enemy_rect_list.append(eye_surf.get_rect(midbottom = (randint(1280, 1400), 500)))
+
 
     if game_active:
         screen.blit(sky_surface, (0,0))
@@ -90,13 +122,15 @@ while True:
             hero_rect.bottom = 620
         screen.blit(hero_surface, hero_rect)
 
-        screen.blit(goblin_surface, goblin_rect)
-        goblin_rect.right -= 4
-        if goblin_rect.left < -128: goblin_rect.left = 1280
+        # obstacle / enemy movement
+        enemy_rect_list = enemy_movement(enemy_rect_list)
+
+        # screen.blit(goblin_surface, goblin_rect)
+        # goblin_rect.right -= 4
+        # if goblin_rect.left < -128: goblin_rect.left = 1280
 
         #COLLISION
-        if goblin_rect.colliderect(hero_rect):
-            game_active = False
+
     else:
         screen.fill((94,129,162))
         screen.blit(hero_stand, hero_stand_rect)
