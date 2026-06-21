@@ -20,7 +20,7 @@ image_hero_path = os.path.join(base_dir, "Assets", "Sprites", "hero.png")
 font_path = os.path.join(base_dir, "Assets", "Fonts", "Pixeltype.ttf")
 test_font = pygame.font.Font(font_path, 65)
 
-game_active = True
+game_active = False
 start_time = 0
 
 sky_surface = pygame.image.load(image_path).convert_alpha()
@@ -31,15 +31,20 @@ ground_surface.fill('#5a391b')
 #score_surf = test_font.render('My game', False, 'Black')
 #score_rect = score_surf.get_rect(center = (640, 50))
 
-goblin_surface = pygame.image.load(image_goblin_path).convert()
+goblin_surface = pygame.image.load(image_goblin_path).convert_alpha()
 goblin_surface = pygame.transform.flip(goblin_surface, True, False)
-goblin_surface = pygame.transform.scale(goblin_surface, (70, 70))
+goblin_surface = pygame.transform.scale2x(goblin_surface)
 goblin_rect = goblin_surface.get_rect(midbottom = (1152, 620))
 
-hero_surface = pygame.image.load(image_hero_path).convert()
-hero_surface = pygame.transform.scale(hero_surface, (74,104 ))
+hero_surface = pygame.image.load(image_hero_path).convert_alpha()
+hero_surface = pygame.transform.scale2x(hero_surface)
 hero_rect = hero_surface.get_rect(midbottom = (64, 620))
 hero_gravity = 0
+
+#intro scene
+hero_stand = pygame.image.load(image_hero_path).convert_alpha()
+hero_stand = pygame.transform.scale2x(hero_stand)
+hero_stand_rect = hero_stand.get_rect(center = (640, 360))
 
 while True:
     for event in pygame.event.get():
@@ -85,7 +90,8 @@ while True:
         if goblin_rect.colliderect(hero_rect):
             game_active = False
     else:
-        screen.fill('Yellow')
+        screen.fill((94,129,162))
+        screen.blit(hero_stand, hero_stand_rect)
 
 
     pygame.display.update()
