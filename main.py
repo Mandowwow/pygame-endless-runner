@@ -7,6 +7,7 @@ def display_score():
     score_surf = test_font.render(f'Score: {current_time}',False,(64,64,64))
     score_rect = score_surf.get_rect(center = (640, 50))
     screen.blit(score_surf, score_rect)
+    return current_time
 
 pygame.init()
 screen = pygame.display.set_mode((1280,720))
@@ -22,6 +23,7 @@ test_font = pygame.font.Font(font_path, 65)
 
 game_active = False
 start_time = 0
+score = 0
 
 sky_surface = pygame.image.load(image_path).convert_alpha()
 
@@ -45,6 +47,12 @@ hero_gravity = 0
 hero_stand = pygame.image.load(image_hero_path).convert_alpha()
 hero_stand = pygame.transform.scale2x(hero_stand)
 hero_stand_rect = hero_stand.get_rect(center = (640, 360))
+
+game_name_surf = test_font.render('Nora Runner',False,(111,196,169))
+game_name_rect = game_name_surf.get_rect(center = (640, 260))
+
+game_message_surf = test_font.render('Press space to run', False,(111,196,169))
+game_message_rect = game_message_surf.get_rect(center = (640, 460))
 
 while True:
     for event in pygame.event.get():
@@ -72,7 +80,7 @@ while True:
         # pygame.draw.rect(screen, 'Pink', score_rect)
         # pygame.draw.rect(screen, 'Pink', score_rect, 6)
         # screen.blit(score_surf, score_rect)
-        display_score()
+        score = display_score()
 
         #PLAYER
         hero_gravity += 1
@@ -93,6 +101,14 @@ while True:
         screen.fill((94,129,162))
         screen.blit(hero_stand, hero_stand_rect)
 
+        score_message_surf = test_font.render(f'Your score: {score}', False, (111,196,169))
+        score_message_rect = score_message_surf.get_rect(center = (640, 460))
+        screen.blit(game_name_surf, game_name_rect)
+
+        if score == 0:
+            screen.blit(game_message_surf, game_message_rect)
+        else:
+            screen.blit(score_message_surf, score_message_rect)
 
     pygame.display.update()
     clock.tick(60)
