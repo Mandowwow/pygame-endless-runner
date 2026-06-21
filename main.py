@@ -15,12 +15,22 @@ def enemy_movement(enemy_list):
         for enemy_rect in enemy_list:
             enemy_rect.x -= 5
 
-            screen.blit(goblin_surface, enemy_rect)
+            if enemy_rect.bottom == 620: 
+                screen.blit(goblin_surface, enemy_rect)
+            else:
+                screen.blit(eye_surf, enemy_rect)          
 
         enemy_list = [enemy for enemy in enemy_list if enemy.x > -128]
 
         return enemy_list
     else: return []
+
+def collisions(player, enemies):
+    if enemies:
+        for enemy_rect in enemies:
+            if player.colliderect(enemy_rect):
+                return False
+    return True
 
 pygame.init()
 screen = pygame.display.set_mode((1280,720))
@@ -130,10 +140,13 @@ while True:
         # if goblin_rect.left < -128: goblin_rect.left = 1280
 
         #COLLISION
-
+        game_active = collisions(hero_rect, enemy_rect_list)
     else:
         screen.fill((94,129,162))
         screen.blit(hero_stand, hero_stand_rect)
+        enemy_rect_list.clear()
+        hero_rect = hero_surface.get_rect(midbottom = (64, 620))
+        hero_gravity = 0
 
         score_message_surf = test_font.render(f'Your score: {score}', False, (111,196,169))
         score_message_rect = score_message_surf.get_rect(center = (640, 460))
